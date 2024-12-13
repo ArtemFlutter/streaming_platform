@@ -1,0 +1,16 @@
+# Використовуємо Node.js образ
+FROM node:14
+
+# Вибираємо рабочу директорію
+WORKDIR /app
+
+# Копіюємо файли проекта
+COPY package*.json ./
+RUN npm install
+COPY . .
+
+# Відкриваєм порт 3000
+EXPOSE 3000
+
+# Запускаєм сервер
+CMD ["node", "server.js"]

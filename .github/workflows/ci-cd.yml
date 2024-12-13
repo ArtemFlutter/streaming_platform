@@ -1,0 +1,69 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Node.js Backend (movie_api)
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Dependencies
+        run: |
+          cd movie_api
+          npm install
+
+      - name: Run Tests (если у вас есть тесты)
+        run: |
+          cd movie_api
+          npm test
+
+      - name: Deploy to Production (если требуется деплой)
+        run: |
+          # Добавьте команду для деплоя, например:
+          # ssh user@server "cd /path/to/app && git pull && npm install"
+          
+  # Flutter Frontend (streaming_platform)
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.0'  # Укажите нужную версию Flutter
+
+      - name: Install Dependencies
+        run: |
+          cd streaming_platform
+          flutter pub get
+
+      - name: Run Tests (если у вас есть тесты)
+        run: |
+          cd streaming_platform
+          flutter test
+
+      - name: Build Flutter App (если нужно)
+        run: |
+          cd streaming_platform
+          flutter build apk  # или flutter build ios в зависимости от платформы
+          
+      - name: Deploy to Production (если требуется деплой)
+        run: |
+          # Добавьте команду для деплоя, например:
+          # scp -r build/app/outputs/flutter-apk/app-release.apk user@server:/path/to/production
